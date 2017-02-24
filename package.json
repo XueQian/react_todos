@@ -1,0 +1,45 @@
+{
+  "name": "react_todos",
+  "version": "1.0.0",
+  "description": "react todos ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XueQian/react_todos.git"
+  },
+  "author": "XueQian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XueQian/react_todos/issues"
+  },
+  "homepage": "https://github.com/XueQian/react_todos#readme",
+  "browserify": {
+    "transform": [
+      [
+        "reactify",
+        {
+          "es6": true
+        }
+      ]
+    ]
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "browserify": "^14.1.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-less": "^3.3.0",
+    "gulp-notify": "^3.0.0",
+    "gulp-sourcemaps": "^2.4.1",
+    "react": "^15.4.2",
+    "reactify": "^1.1.1",
+    "require-dir": "^0.3.1",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.9.0"
+  },
+  "dependencies": {
+    "react-dom": "^15.4.2"
+  }
+}
