@@ -1,5 +1,6 @@
 const React = require('react');
 const axios = require('axios');
+const Item = require('./item.jsx');
 const ENTER_KEY = 13;
 
 let TodoList = React.createClass({
@@ -53,15 +54,23 @@ let TodoList = React.createClass({
         this.setState({newItem: event.target.value});
     },
 
-    render: function () {
+    checkItem: function (item) {
 
+        item.done = true;
+        axios.post('http://localhost:4010/todoitems', item)
+            .then(function (response) {
+                console.log(response.status + "put item");
+            });
+    },
+
+    render: function () {
+        const that = this;
         const items = this.state.items;
         return (
             <div className="container">
                 <div className="homepage">
 
                     <h1>todos</h1>
-
                     <input
                         placeholder="What need to be done?"
                         value={this.state.newItem}
@@ -70,9 +79,7 @@ let TodoList = React.createClass({
                     />
                     <ul>
                         {items.map(function (item) {
-                            return <li>
-                                <input type="checkbox" value={item.id}/>{item.text}
-                            </li>
+                            return <Item item={item} checkItem={that.checkItem}/>
                         }) }
                     </ul>
                 </div>
