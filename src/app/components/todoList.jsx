@@ -1,6 +1,7 @@
 const React = require('react');
 const axios = require('axios');
 const Item = require('./item.jsx');
+const ItemCount = require('./itemCount.jsx');
 const ENTER_KEY = 13;
 
 let TodoList = React.createClass({
@@ -82,6 +83,8 @@ let TodoList = React.createClass({
                             return <Item item={item} checkItem={that.checkItem}/>
                         }) }
                     </ul>
+
+                    <ItemCount items={this.state.items}/>
                 </div>
             </div>
         );
