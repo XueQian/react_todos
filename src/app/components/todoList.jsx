@@ -2,6 +2,7 @@ const React = require('react');
 const axios = require('axios');
 const Item = require('./item.jsx');
 const ItemCount = require('./itemCount.jsx');
+const _ = require('lodash');
 const ENTER_KEY = 13;
 
 let TodoList = React.createClass({
@@ -64,6 +65,15 @@ let TodoList = React.createClass({
             });
     },
 
+    clearCompleted: function () {
+
+        this.setState({
+            items: _.filter(this.state.items, function (item) {
+                return item.done == false;
+            })
+        });
+    },
+
     render: function () {
         const that = this;
         const items = this.state.items;
@@ -85,6 +95,8 @@ let TodoList = React.createClass({
                     </ul>
 
                     <ItemCount items={this.state.items}/>
+
+                    <button onClick={this.clearCompleted}>Clear completed</button>
                 </div>
             </div>
         );
