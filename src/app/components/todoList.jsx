@@ -15,6 +15,10 @@ let TodoList = React.createClass({
         };
     },
     componentDidMount: function () {
+        this.fetchItems();
+    },
+
+    fetchItems: function () {
 
         const that = this;
 
@@ -59,13 +63,39 @@ let TodoList = React.createClass({
     checkItem: function (item) {
 
         item.done = true;
+
         axios.post('http://localhost:4010/todoitems', item)
             .then(function (response) {
-                console.log(response.status + "put item");
+                console.log(response.status + "put item, id:" + item.id);
             });
     },
 
     clearCompleted: function () {
+        _.find(this.state.items, function (item) {
+            if (item.done == true) {
+
+                axios.delete('http://localhost:4010/todoitems/' + item.id)
+                    .then(function (response) {
+                        console.log(response.status + "delete item, id:" + item.id);
+                    })
+            }
+        });
+
+        this.fetchItems();
+    },
+
+    filterActive: function () {
+        this.fetchItems();
+
+        this.setState({
+            items: _.filter(this.state.items, function (item) {
+                return item.done == true;
+            })
+        });
+    },
+
+    filterCompleted: function () {
+        this.fetchItems();
 
         this.setState({
             items: _.filter(this.state.items, function (item) {
@@ -96,6 +126,9 @@ let TodoList = React.createClass({
 
                     <ItemCount items={this.state.items}/>
 
+                    <button onClick={this.fetchItems()}>All</button>
+                    <button onClick={this.filterActive}>Active</button>
+                    <button onClick={this.filterCompleted}>Completed</button>
                     <button onClick={this.clearCompleted}>Clear completed</button>
                 </div>
             </div>
