@@ -11,9 +11,11 @@ let TodoList = React.createClass({
 
         return {
             items: [],
+            fetchItems: [],
             newItem: ''
         };
     },
+
     componentDidMount: function () {
         this.fetchItems();
     },
@@ -22,9 +24,12 @@ let TodoList = React.createClass({
 
         const that = this;
 
-        axios.get("http://localhost:4010/todoitems")
+        axios.get("http://localhost:8080/todoitems")
             .then(function (response) {
-                that.setState({items: response.data.items});
+                that.setState({
+                    items: response.data.items,
+                    fetchItems: response.data.items
+                });
             });
     },
 
@@ -47,7 +52,11 @@ let TodoList = React.createClass({
 
             this.state.items.push(newItem);
 
-            axios.post('http://localhost:4010/todoitems', newItem)
+            axios.post('http://localhost:8080/todoitems?todoItem=' + newInput, null, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            })
                 .then(function (response) {
                     console.log(response.status + "post a new item");
                 });
@@ -64,17 +73,20 @@ let TodoList = React.createClass({
 
         item.done = true;
 
-        axios.post('http://localhost:4010/todoitems', item)
+        axios.put('http://localhost:8080/todoitems/' + item.id, item)
             .then(function (response) {
                 console.log(response.status + "put item, id:" + item.id);
             });
+
+        this.fetchItems();
     },
 
-    clearCompleted: function () {
-        _.find(this.state.items, function (item) {
+    clearCompleted: function (event) {
+        event.preventDefault();
+        _.find(this.state.fetchItems, function (item) {
             if (item.done == true) {
 
-                axios.delete('http://localhost:4010/todoitems/' + item.id)
+                axios.delete('http://localhost:8080/todoitems?id=' + item.id)
                     .then(function (response) {
                         console.log(response.status + "delete item, id:" + item.id);
                     })
@@ -84,23 +96,27 @@ let TodoList = React.createClass({
         this.fetchItems();
     },
 
-    filterActive: function () {
-        this.fetchItems();
+    filterActive: function (event) {
+        event.preventDefault();
+
+        let activeItems = _.filter(this.state.fetchItems, function (item) {
+            return item.done == false;
+        });
 
         this.setState({
-            items: _.filter(this.state.items, function (item) {
-                return item.done == true;
-            })
+            items: activeItems
         });
     },
 
-    filterCompleted: function () {
-        this.fetchItems();
+    filterCompleted: function (event) {
+        event.preventDefault();
+
+        let completedItems = _.filter(this.state.items, function (item) {
+            return item.done == true;
+        });
 
         this.setState({
-            items: _.filter(this.state.items, function (item) {
-                return item.done == false;
-            })
+            items: completedItems
         });
     },
 
@@ -115,21 +131,21 @@ let TodoList = React.createClass({
                     <input
                         placeholder="What need to be done?"
                         value={this.state.newItem}
-                        onKeyDown={this.submitNewItem}
-                        onChange={this.createNewItem}
+                        onKeyDown={this.submitNewItem.bind(this)}
+                        onChange={this.createNewItem.bind(this)}
                     />
                     <ul>
                         {items.map(function (item) {
-                            return <Item item={item} checkItem={that.checkItem}/>
+                            return <Item item={item} checkItem={that.checkItem.bind(this)}/>
                         }) }
                     </ul>
 
                     <ItemCount items={this.state.items}/>
 
-                    <button onClick={this.fetchItems()}>All</button>
-                    <button onClick={this.filterActive}>Active</button>
-                    <button onClick={this.filterCompleted}>Completed</button>
-                    <button onClick={this.clearCompleted}>Clear completed</button>
+                    <button onClick={this.fetchItems.bind(this)}>All</button>
+                    <button onClick={this.filterActive.bind(this)}>Active</button>
+                    <button onClick={this.filterCompleted.bind(this)}>Completed</button>
+                    <button onClick={this.clearCompleted.bind(this)}>Clear completed</button>
                 </div>
             </div>
         );
