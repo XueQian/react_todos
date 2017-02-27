@@ -129,23 +129,34 @@ let TodoList = React.createClass({
 
                     <h1>todos</h1>
                     <input
+                        id="newInput"
                         placeholder="What need to be done?"
                         value={this.state.newItem}
                         onKeyDown={this.submitNewItem.bind(this)}
                         onChange={this.createNewItem.bind(this)}
                     />
-                    <ul>
+                    <ul id="itemList">
                         {items.map(function (item) {
                             return <Item item={item} checkItem={that.checkItem.bind(this)}/>
                         }) }
                     </ul>
 
-                    <ItemCount items={this.state.items}/>
+                    <ul id="footerList">
+                        <li id="itemCount"><ItemCount items={this.state.items}/></li>
 
-                    <button onClick={this.fetchItems.bind(this)}>All</button>
-                    <button onClick={this.filterActive.bind(this)}>Active</button>
-                    <button onClick={this.filterCompleted.bind(this)}>Completed</button>
-                    <button onClick={this.clearCompleted.bind(this)}>Clear completed</button>
+                        <li>
+                            <button onClick={this.fetchItems.bind(this)}>All</button>
+                        </li>
+                        <li>
+                            <button onClick={this.filterActive.bind(this)}>Active</button>
+                        </li>
+                        <li>
+                            <button onClick={this.filterCompleted.bind(this)}>Completed</button>
+                        </li>
+                        <li>
+                            <button onClick={this.clearCompleted.bind(this)}>Clear completed</button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         );
