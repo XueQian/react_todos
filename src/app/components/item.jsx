@@ -6,6 +6,7 @@ let Item = React.createClass({
     render: function () {
         const item = this.props.item;
         const isChecked = item.done ? "checked" : "unChecked";
+
         return (
             <li className={isChecked} id="item">
                 <input type="checkbox"

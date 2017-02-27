@@ -111,7 +111,7 @@ let TodoList = React.createClass({
     filterCompleted: function (event) {
         event.preventDefault();
 
-        let completedItems = _.filter(this.state.items, function (item) {
+        let completedItems = _.filter(this.state.fetchItems, function (item) {
             return item.done == true;
         });
 
@@ -123,6 +123,31 @@ let TodoList = React.createClass({
     render: function () {
         const that = this;
         const items = this.state.items;
+
+        if (this.state.fetchItems.length == 0) {
+
+            return (
+                <div className="container">
+                    <div className="homepage">
+
+                        <h1>todos</h1>
+                        <input
+                            id="newInput"
+                            placeholder="What need to be done?"
+                            value={this.state.newItem}
+                            onKeyDown={this.submitNewItem}
+                            onChange={this.createNewItem}
+                        />
+                        <ul id="itemList">
+                            {items.map(function (item) {
+                                return <Item item={item} checkItem={that.checkItem}/>
+                            }) }
+                        </ul>
+                    </div>
+                </div>
+            );
+
+        }
         return (
             <div className="container">
                 <div className="homepage">
@@ -132,29 +157,29 @@ let TodoList = React.createClass({
                         id="newInput"
                         placeholder="What need to be done?"
                         value={this.state.newItem}
-                        onKeyDown={this.submitNewItem.bind(this)}
-                        onChange={this.createNewItem.bind(this)}
+                        onKeyDown={this.submitNewItem}
+                        onChange={this.createNewItem}
                     />
                     <ul id="itemList">
                         {items.map(function (item) {
-                            return <Item item={item} checkItem={that.checkItem.bind(this)}/>
+                            return <Item item={item} checkItem={that.checkItem} key={item.id}/>
                         }) }
                     </ul>
 
                     <ul id="footerList">
-                        <li id="itemCount"><ItemCount items={this.state.items}/></li>
+                        <li id="itemCount" key="itemCount"><ItemCount items={this.state.items}/></li>
 
-                        <li>
-                            <button onClick={this.fetchItems.bind(this)}>All</button>
+                        <li key="all">
+                            <button onClick={this.fetchItems}>All</button>
                         </li>
-                        <li>
-                            <button onClick={this.filterActive.bind(this)}>Active</button>
+                        <li key="active">
+                            <button onClick={this.filterActive}>Active</button>
                         </li>
-                        <li>
-                            <button onClick={this.filterCompleted.bind(this)}>Completed</button>
+                        <li key="completed">
+                            <button onClick={this.filterCompleted}>Completed</button>
                         </li>
-                        <li>
-                            <button onClick={this.clearCompleted.bind(this)}>Clear completed</button>
+                        <li key="clear">
+                            <button onClick={this.clearCompleted}>Clear completed</button>
                         </li>
                     </ul>
                 </div>
